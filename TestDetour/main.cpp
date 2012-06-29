@@ -32,7 +32,16 @@ const char* (*luaL_checklstring_ss)(lua_State *, int, size_t *) = 0;
 #define LUA_SETFIELD_MASK "xxxxxxxxxxxxxxxxx????xxxxxxxxxxxxxxxxxxxxxxxx????xxxxxxxxxxxxxxxxxxxxx?????x????xxxxxxxxxxxxxx"
 void (*lua_setfield_ss)(lua_State *, int, const char *) = 0;
 
+#define LUA_PCALL_SIG "\x8B\x4C\x24\x10\x83\xEC\x08\x56\x8B\x74\x24\x10\x85\xC9\x75\x04\x33\xC9\xEB\x0C\x8B\xD6\xE8\x00\x00\x00\x00\x2B\x46\x20\x8B\xC8\x8B\x44\x24\x14"
+#define LUA_PCALL_MASK "xxxxxxxxxxxxxxxxxxxxxxx????xxxxxxxxx"
+int (*lua_pcall_ss)(lua_State *, int, int, int) = 0;
+
+#define LUAL_LOADBUFFER_SIG "\x83\xEC\x1C\x8B\x44\x24\x24\x8B\x4C\x24\x28\x89\x04\x24\x8B\x44\x24\x2C\x33\xD2\x89\x4C\x24\x04\x3B\xC2\x75\x05\xB8\x00\x00\x00\x00"
+#define LUAL_LOADBUFFER_MASK "xxxxxxxxxxxxxxxxxxxxxxxxxxxxx????"
+int (*luaL_loadbuffer_ss)(lua_State *, const char *, size_t, const char *) = 0;
+
 bool injectedFunctions = false;
+lua_State* luaPtr;
 FILE* logFile;
 
 //SETUP_SIMPLE_DETOUR( DrawError_Detour, CDetour::DrawError_T, CDetour::DrawError_H );
@@ -95,7 +104,8 @@ int ri_loadfile_New(lua_State *L, const char *filename)
 int ri_dofile_New(lua_State *L, const char *filename)
 {
 	LogConsole("[ri_dofile] filename = %s\n", filename);
-	
+	luaPtr = L;
+
 	if(!injectedFunctions)
 	{
 		RegisterCFunction(L, lua_log, "injectedLog");
@@ -119,6 +129,23 @@ bool SigScanFunction(CSimpleScan &scan, const char *name, const char *sig, const
 	}
 }
 
+typedef struct _INIT_STRUCT {
+	LPCSTR Message;
+} INIT_STRUCT, *PINIT_STRUCT;
+
+extern "C" __declspec(dllexport) void ExecuteLua(PVOID message) {
+	PINIT_STRUCT messageStruct = reinterpret_cast<PINIT_STRUCT>(message);
+	int result = luaL_loadbuffer_ss(luaPtr, messageStruct->Message, strlen(messageStruct->Message), messageStruct->Message) || lua_pcall_ss(luaPtr, 0, LUA_MULTRET, 0);
+	if(result == 0)
+	{
+		LogConsole("[Run Lua] %s ran successfully\n", messageStruct->Message);
+	}
+	else
+	{
+		LogConsole("[Run Lua] %s failed\n", messageStruct->Message);
+	}
+}
+
 BOOL WINAPI DllMain( HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved )
 {
 	if(fdwReason == DLL_PROCESS_ATTACH)
@@ -139,7 +166,9 @@ BOOL WINAPI DllMain( HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved )
 		&& SigScanFunction(driverGame, "ri_loadfile", RI_LOADFILE_SIG, RI_LOADFILE_MASK, (void **)&ri_loadfile_Orig)
 		&& SigScanFunction(driverGame, "luaL_checklstring", LUAL_CHECKLSTRING_SIG, LUAL_CHECKLSTRING_MASK, (void **)&luaL_checklstring_ss)
 		&& SigScanFunction(driverGame, "lua_setfield", LUA_SETFIELD_SIG, LUA_SETFIELD_MASK, (void **)&lua_setfield_ss)
-        && SigScanFunction(driverGame, "lua_pushcclosure", LUA_PUSHCCLOSURE_SIG, LUA_PUSHCCLOSURE_SIG, (void **)&lua_pushcclosure_ss);
+		&& SigScanFunction(driverGame, "lua_pushcclosure", LUA_PUSHCCLOSURE_SIG, LUA_PUSHCCLOSURE_SIG, (void **)&lua_pushcclosure_ss)
+		&& SigScanFunction(driverGame, "lua_pcall", LUA_PCALL_SIG, LUA_PCALL_SIG, (void **)&lua_pcall_ss)
+		&& SigScanFunction(driverGame, "luaL_loadbuffer", LUAL_LOADBUFFER_SIG, LUAL_LOADBUFFER_SIG, (void **)&luaL_loadbuffer_ss);
 		
 		if(!success)
 		{
