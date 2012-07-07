@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Syringe", "Syringe\Syringe.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InjectorTest", "InjectorTest\InjectorTest.csproj", "{0D7FB4B1-F638-4573-AD0B-8F4BA1BA76CF}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestDirectXHook", "TestDirectXHook\TestDirectXHook.vcxproj", "{D00E7CB7-29B7-45EA-8A37-278267D76CE9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -83,6 +85,18 @@ Global
 		{0D7FB4B1-F638-4573-AD0B-8F4BA1BA76CF}.Release|Win32.ActiveCfg = Release|x86
 		{0D7FB4B1-F638-4573-AD0B-8F4BA1BA76CF}.Release|x86.ActiveCfg = Release|x86
 		{0D7FB4B1-F638-4573-AD0B-8F4BA1BA76CF}.Release|x86.Build.0 = Release|x86
+		{D00E7CB7-29B7-45EA-8A37-278267D76CE9}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{D00E7CB7-29B7-45EA-8A37-278267D76CE9}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{D00E7CB7-29B7-45EA-8A37-278267D76CE9}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{D00E7CB7-29B7-45EA-8A37-278267D76CE9}.Debug|Win32.ActiveCfg = Debug|Win32
+		{D00E7CB7-29B7-45EA-8A37-278267D76CE9}.Debug|Win32.Build.0 = Debug|Win32
+		{D00E7CB7-29B7-45EA-8A37-278267D76CE9}.Debug|x86.ActiveCfg = Debug|Win32
+		{D00E7CB7-29B7-45EA-8A37-278267D76CE9}.Release|Any CPU.ActiveCfg = Release|Win32
+		{D00E7CB7-29B7-45EA-8A37-278267D76CE9}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{D00E7CB7-29B7-45EA-8A37-278267D76CE9}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{D00E7CB7-29B7-45EA-8A37-278267D76CE9}.Release|Win32.ActiveCfg = Release|Win32
+		{D00E7CB7-29B7-45EA-8A37-278267D76CE9}.Release|Win32.Build.0 = Release|Win32
+		{D00E7CB7-29B7-45EA-8A37-278267D76CE9}.Release|x86.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

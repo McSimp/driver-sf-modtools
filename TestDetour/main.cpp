@@ -1,11 +1,6 @@
 #include <windows.h>
-#include <cstdio>
 #include "csimplescan.h"
 #include "csimpledetour.h"
-//#include "cdetour.h"
-#include <stdio.h>
-#include <stdarg.h>
-#include <varargs.h>
 #include "lua.h"
 
 //#define LUAL_LOADFILE_SIG "\x81\xEC\x1C\x02\x00\x00\x53\x55\x8B\xAC\x24\x2C\x02\x00\x00\x56\x8B\xB4\x24\x2C\x02\x00\x00\x57\x8B\x7E\x08\x2B\x7E\x0C\xC7\x44\x24\x24\x00\x00\x00\x00\xC1\xFF\x03"
